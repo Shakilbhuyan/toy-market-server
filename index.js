@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,17 +30,41 @@ async function run() {
 
     const toyCollections = client.db('toymarket').collection('toyCollection');
 
-    app.get('/alltoy', async(req, res)=>{
-        const cursor = toyCollections.find();
-        const result = await cursor.toArray();
-        res.send(result);
-       });
+    app.get('/alltoy', async (req, res) => {
+      const cursor = toyCollections.find();
+      const result = await cursor.toArray();
+      console.log("All Toys");
+      res.send(result);
+    });
 
-       app.post('/addtoy', async(req, res)=>{
-        const newToy = req.body;
-        const result = await toyCollections.insertOne(newToy);
-        res.send(result)
-       })
+    app.get('/mytoy/:email', async (req, res) => {
+      const cursor = toyCollections.find({email: req.params.email});
+      const result = await cursor.toArray();
+      console.log(email, result);
+      res.send(result);
+    });
+
+    app.post('/addtoy', async (req, res) => {
+      const newToy = req.body;
+      const result = await toyCollections.insertOne(newToy);
+      console.log(newToy, result);
+      res.send(result);
+    })
+
+    app.delete('/toys/:id', async (req, res) => {
+      const id = req.params.id;
+      const objectID = new ObjectId(id);
+      const result = await toyCollections.deleteOne({ _id: objectID });
+      res.send(result);
+    })
+
+    app.patch('/toys/:id', async (req, res) => {
+      const id = req.params.id;
+      const objectID = new ObjectId(id);
+      const body = req.body;
+      const result = await toyCollections.updateOne({ _id: objectID }, {$set: body});
+      res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -50,14 +74,14 @@ async function run() {
     // await client.close();
   }
 }
-run().catch(console.dir);
+run();
 
 
 
-app.get('/',(req, res)=>{
-    res.send('Server is Running.....')
+app.get('/', (req, res) => {
+  res.send('Server is Running.....')
 })
 
-app.listen(port, ()=>{
-    console.log(`port is running on ${port}`)
+app.listen(port, () => {
+  console.log(`port is running on ${port}`)
 })
