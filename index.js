@@ -40,16 +40,10 @@ async function run() {
     app.get('/mytoy/:email', async (req, res) => {
       const cursor = toyCollections.find({email: req.params.email});
       const result = await cursor.toArray();
-      console.log(email, result);
       res.send(result);
     });
 
-    app.post('/addtoy', async (req, res) => {
-      const newToy = req.body;
-      const result = await toyCollections.insertOne(newToy);
-      console.log(newToy, result);
-      res.send(result);
-    })
+   
 
     app.delete('/toys/:id', async (req, res) => {
       const id = req.params.id;
