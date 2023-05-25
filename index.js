@@ -38,7 +38,7 @@ async function run() {
     });
 
     app.get('/mytoy/:email', async (req, res) => {
-      const cursor = toyCollections.find({email: req.params.email});
+      const cursor = toyCollections.find({selleremail: req.params.email});
       const result = await cursor.toArray();
       res.send(result);
     });
