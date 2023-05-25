@@ -42,11 +42,14 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-    app.get('/viewdetails/:id', async (req, res) => {
-      const cursor = toyCollections.find({_id: req.params.id});
-      const result = await cursor.toArray();
-      res.send(result);
-    });
+    
+
+    app.get('/alltoy/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result =  await toyCollections.findOne(query);
+      res.send(result)
+    })
 
    app.post('/addtoy', async(req, res)=>{
     const newToy = req.body;
