@@ -43,7 +43,12 @@ async function run() {
       res.send(result);
     });
 
-   
+   app.post('/addtoy', async(req, res)=>{
+    const newToy = req.body;
+    console.log('new toy', newToy)
+    const result = await toyCollections.insertOne({...newToy});
+    res.send(result)
+   })
 
     app.delete('/toys/:id', async (req, res) => {
       const id = req.params.id;
