@@ -42,6 +42,11 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    app.get('/viewdetails/:id', async (req, res) => {
+      const cursor = toyCollections.find({_id: req.params.id});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
    app.post('/addtoy', async(req, res)=>{
     const newToy = req.body;
